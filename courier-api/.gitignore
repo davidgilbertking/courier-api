@@ -1,0 +1,34 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs and editors
+.idea/
+nbproject/
+.vscode/
+.buildpath
+.project
+.settings
+
+# Composer
+/vendor/
+composer.phar
+
+# PHPUnit / Codeception
+/phpunit.xml
+phpunit.phar
+tests/_output/
+tests/_support/_generated/
+
+# Yii2 specific
+/runtime/
+web/assets/
+.env
+.env.local
+/web/debug/
+web/index-test.php
+
+# Vagrant / Docker / CI
+.vagrant/
+docker-compose.override.yml
+*.log
