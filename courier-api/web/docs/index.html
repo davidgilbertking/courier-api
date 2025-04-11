@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#fafafa" />
+  <title>Courier API Docs</title>
+
+  <!-- Favicons -->
+  <link rel="icon" href="/docs/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/docs/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/docs/favicon-16x16.png" />
+
+  <!-- Swagger UI styles -->
+  <link rel="stylesheet" href="/docs/swagger-ui.css" />
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #fafafa;
+    }
+  </style>
+</head>
+<body>
+<div id="swagger-ui"></div>
+
+<!-- Swagger UI scripts -->
+<script src="/docs/swagger-ui-bundle.js"></script>
+<script src="/docs/swagger-ui-standalone-preset.js"></script>
+<script>
+  window.onload = () => {
+    SwaggerUIBundle({
+      url: "/openapi.yaml",
+      dom_id: "#swagger-ui",
+      deepLinking: true,
+      presets: [
+        SwaggerUIBundle.presets.apis,
+        SwaggerUIStandalonePreset
+      ],
+      layout: "StandaloneLayout"
+    });
+  };
+</script>
+</body>
+</html>

@@ -1,0 +1,251 @@
+openapi: 3.0.0
+info:
+  title: Courier API
+  version: 1.0.0
+  description: |
+    REST API для управления курьерами, транспортом и заявками курьеров.
+servers:
+  - url: http://localhost:8080
+    description: Локальный сервер
+
+paths:
+  /couriers:
+    get:
+      summary: Получить список курьеров
+      parameters:
+        - in: query
+          name: role
+          schema:
+            type: string
+          description: Фильтр по роли (main, basic)
+      responses:
+        '200':
+          description: Список курьеров
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Courier'
+        '401':
+          description: API ключ отсутствует или неверный
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      summary: Создать нового курьера
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourierInput'
+      responses:
+        '201':
+          description: Курьер создан
+        '401':
+          description: API ключ отсутствует или неверный
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /vehicles:
+    get:
+      summary: Получить список транспорта
+      parameters:
+        - in: query
+          name: courier_id
+          schema:
+            type: integer
+          required: false
+          description: Фильтр по ID курьера
+        - in: query
+          name: type
+          schema:
+            type: string
+            enum: [car, scooter]
+          required: false
+          description: Тип транспорта
+      responses:
+        '200':
+          description: Список транспорта
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vehicle'
+        '401':
+          description: API ключ отсутствует или неверный
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      summary: Добавить транспорт курьеру
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleInput'
+      responses:
+        '201':
+          description: Транспорт добавлен
+        '401':
+          description: API ключ отсутствует или неверный
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /courier-requests:
+    get:
+      summary: Получить заявки курьеров
+      responses:
+        '200':
+          description: Список заявок
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourierRequest'
+        '401':
+          description: API ключ отсутствует или неверный
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      summary: Создать заявку курьера
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourierRequestInput'
+      responses:
+        '201':
+          description: Заявка создана
+        '401':
+          description: API ключ отсутствует или неверный
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    Courier:
+      type: object
+      properties:
+        id:
+          type: integer
+        role:
+          type: string
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        patronymic:
+          type: string
+          nullable: true
+
+    CourierInput:
+      type: object
+      required: [role, email, first_name, last_name]
+      properties:
+        role:
+          type: string
+          enum: [main, basic]
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        patronymic:
+          type: string
+
+    Vehicle:
+      type: object
+      properties:
+        id:
+          type: integer
+        courier_id:
+          type: integer
+        type:
+          type: string
+          enum: [car, scooter]
+        serial_number:
+          type: string
+
+    VehicleInput:
+      type: object
+      required: [courier_id, type, serial_number]
+      properties:
+        courier_id:
+          type: integer
+          minimum: 1
+        type:
+          type: string
+          enum: [car, scooter]
+        serial_number:
+          type: string
+          description: "Уникальный серийный номер транспорта"
+
+    CourierRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        courier_id:
+          type: integer
+        vehicle_id:
+          type: integer
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    CourierRequestInput:
+      type: object
+      required: [courier_id, vehicle_id, status]
+      properties:
+        courier_id:
+          type: integer
+          minimum: 1
+        vehicle_id:
+          type: integer
+          minimum: 1
+        status:
+          type: string
+          enum: [started, holded, finished]
+
+    ErrorResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Unauthorized
+        message:
+          type: string
+          example: API ключ отсутствует.
+        code:
+          type: integer
+          example: 0
+        status:
+          type: integer
+          example: 401
+        type:
+          type: string
+          example: yii\web\UnauthorizedHttpException
