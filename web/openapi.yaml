@@ -48,7 +48,8 @@ paths:
       parameters:
         - name: id
           in: path
-          required: true
+          required: true  # обязательно!
+          description: Уникальный идентификатор курьера
           schema:
             type: integer
       requestBody:
@@ -60,6 +61,8 @@ paths:
       responses:
         '200':
           description: Курьер обновлён
+        '404':
+          description: Курьер не найден
         '422':
           description: Ошибка валидации
 
