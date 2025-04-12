@@ -14,7 +14,7 @@ REST API для управления курьерами, транспортом 
 ## 🚀 Установка (локально, без Vagrant)
 
 ```bash
-git clone https://github.com/davidgilbertking/courier-api.git
+git clone https://github.com/your-username/courier-api.git
 cd courier-api
 composer install
 cp .env.example .env # если требуется
@@ -29,7 +29,7 @@ php -S localhost:8080 -t web
 ## 🧪 Тесты
 
 ```bash
-vendor/bin/codecept run unit
+vendor/bin/codecept run
 ```
 
 ---
@@ -73,9 +73,47 @@ vagrant up
 
 ## ⚙️ Swagger UI
 
-Swagger UI доступен по адресу: [http://localhost:8080/docs](http://localhost:8080/docs)
+Документация доступна по адресу:
 
----
+```
+http://localhost:8080/docs
+```
+
+Для тестирования защищённых эндпойнтов (POST, PUT, DELETE) через Swagger UI необходимо:
+
+1. **Создать курьера с ролью `main`** (в Swagger'e или через команду `curl`):
+
+   ```bash
+   curl -X 'POST' \
+     'http://localhost:8080/couriers' \
+     -H 'accept: application/json' \
+     -H 'Content-Type: application/json' \
+     -d '{
+       "role": "main",
+       "email": "admin@example.com",
+       "first_name": "Admin",
+       "last_name": "User"
+     }'
+   ```
+
+2. **Получить токен авторизации (api_token)**:
+
+   ```bash
+   curl -X 'GET' \
+     'http://localhost:8080/couriers?role=main' \
+     -H 'accept: application/json'
+   ```
+
+   Найдите в ответе поле `api_token` у созданного курьера.
+
+3. **Открыть Swagger UI** → нажать **Authorize** (в правом верхнем углу), вставить токен в поле:
+
+   ```
+   X-Api-Key: <ваш API токен>
+   ```
+
+4. Нажмите **Authorize**, чтобы использовать Swagger как полноценный клиент для тестирования API.
+
 
 ## 🛠 Требования
 
