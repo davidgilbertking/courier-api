@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace app\models;
 
 class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface

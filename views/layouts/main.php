@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /** @var yii\web\View $this */
 /** @var string $content */
 
@@ -19,7 +21,9 @@ $this->registerMetaTag(['name' => 'description', 'content' => $this->params['met
 $this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_keywords'] ?? '']);
 $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii::getAlias('@web/favicon.ico')]);
 ?>
-<?php $this->beginPage() ?>
+<?php
+
+declare(strict_types=1); $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>" class="h-100">
 <head>
@@ -27,7 +31,9 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <?php $this->head() ?>
 </head>
 <body class="d-flex flex-column h-100">
-<?php $this->beginBody() ?>
+<?php
+
+declare(strict_types=1); $this->beginBody() ?>
 
 <header id="header">
     <?php
@@ -77,7 +83,11 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     </div>
 </footer>
 
-<?php $this->endBody() ?>
+<?php
+
+declare(strict_types=1); $this->endBody() ?>
 </body>
 </html>
-<?php $this->endPage() ?>
+<?php
+
+declare(strict_types=1); $this->endPage() ?>

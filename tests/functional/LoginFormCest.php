@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class LoginFormCest
 {
     public function _before(\FunctionalTester $I)
