@@ -14,7 +14,7 @@ class CourierRequestController extends ActiveController
 {
     public $modelClass = 'app\models\CourierRequest';
 
-    public function actions()
+    public function actions(): array
     {
         $actions = parent::actions();
 
@@ -63,7 +63,7 @@ class CourierRequestController extends ActiveController
     /**
      * Переопределяем удаление: soft delete
      */
-    public function actionDelete($id)
+    public function actionDelete($id): array
     {
         $model = CourierRequest::findOne(['id' => $id, 'deleted' => false]);
         if (!$model) {
@@ -79,7 +79,7 @@ class CourierRequestController extends ActiveController
         return ['status' => 'success', 'message' => 'Заявка помечена как удалённая.'];
     }
 
-    public function behaviors()
+    public function behaviors(): array
     {
         return array_merge(parent::behaviors(), [
             'auth' => [

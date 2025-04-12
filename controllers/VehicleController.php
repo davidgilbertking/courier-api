@@ -14,7 +14,7 @@ class VehicleController extends ActiveController
 {
     public $modelClass = 'app\models\Vehicle';
 
-    public function actions()
+    public function actions(): array
     {
         $actions = parent::actions();
 
@@ -41,7 +41,7 @@ class VehicleController extends ActiveController
         return $actions;
     }
 
-    public function behaviors()
+    public function behaviors(): array
     {
         return array_merge(parent::behaviors(), [
             'auth' => [

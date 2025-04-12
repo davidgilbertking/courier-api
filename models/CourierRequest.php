@@ -33,7 +33,7 @@ class CourierRequest extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'courier_requests';
     }
@@ -41,7 +41,7 @@ class CourierRequest extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['courier_id', 'vehicle_id'], 'default', 'value' => null],
@@ -71,7 +71,7 @@ class CourierRequest extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id'         => 'ID',
@@ -88,7 +88,7 @@ class CourierRequest extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getCourier()
+    public function getCourier(): \yii\db\ActiveQuery
     {
         return $this->hasOne(Courier::class, ['id' => 'courier_id']);
     }
@@ -98,7 +98,7 @@ class CourierRequest extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getVehicle()
+    public function getVehicle(): \yii\db\ActiveQuery
     {
         return $this->hasOne(Vehicle::class, ['id' => 'vehicle_id']);
     }
@@ -108,7 +108,7 @@ class CourierRequest extends \yii\db\ActiveRecord
      *
      * @return string[]
      */
-    public static function optsStatus()
+    public static function optsStatus(): array
     {
         return [
             self::STATUS_STARTED  => 'started',
@@ -120,7 +120,7 @@ class CourierRequest extends \yii\db\ActiveRecord
     /**
      * @return string
      */
-    public function displayStatus()
+    public function displayStatus(): string
     {
         return self::optsStatus()[$this->status] ?? $this->status;
     }
@@ -128,7 +128,7 @@ class CourierRequest extends \yii\db\ActiveRecord
     /**
      * @return bool
      */
-    public function isStatusStarted()
+    public function isStatusStarted(): bool
     {
         return $this->status === self::STATUS_STARTED;
     }
@@ -141,7 +141,7 @@ class CourierRequest extends \yii\db\ActiveRecord
     /**
      * @return bool
      */
-    public function isStatusHolded()
+    public function isStatusHolded(): bool
     {
         return $this->status === self::STATUS_HOLDED;
     }
@@ -154,7 +154,7 @@ class CourierRequest extends \yii\db\ActiveRecord
     /**
      * @return bool
      */
-    public function isStatusFinished()
+    public function isStatusFinished(): bool
     {
         return $this->status === self::STATUS_FINISHED;
     }
@@ -186,12 +186,12 @@ class CourierRequest extends \yii\db\ActiveRecord
         }
     }
 
-    public function formName()
+    public function formName(): string
     {
         return '';
     }
 
-    public function extraFields()
+    public function extraFields(): array
     {
         return ['courier', 'vehicle'];
     }

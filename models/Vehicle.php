@@ -29,7 +29,7 @@ class Vehicle extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'vehicles';
     }
@@ -37,7 +37,7 @@ class Vehicle extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['courier_id', 'type', 'serial_number'], 'required'],
@@ -60,7 +60,7 @@ class Vehicle extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id'            => 'ID',
@@ -75,7 +75,7 @@ class Vehicle extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getCourier()
+    public function getCourier(): \yii\db\ActiveQuery
     {
         return $this->hasOne(Courier::class, ['id' => 'courier_id']);
     }
@@ -85,7 +85,7 @@ class Vehicle extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getCourierRequests()
+    public function getCourierRequests(): \yii\db\ActiveQuery
     {
         return $this->hasMany(CourierRequest::class, ['vehicle_id' => 'id']);
     }
@@ -95,7 +95,7 @@ class Vehicle extends \yii\db\ActiveRecord
      *
      * @return string[]
      */
-    public static function optsType()
+    public static function optsType(): array
     {
         return [
             self::TYPE_CAR     => 'car',
@@ -106,7 +106,7 @@ class Vehicle extends \yii\db\ActiveRecord
     /**
      * @return string
      */
-    public function displayType()
+    public function displayType(): string
     {
         return self::optsType()[$this->type];
     }
@@ -114,7 +114,7 @@ class Vehicle extends \yii\db\ActiveRecord
     /**
      * @return bool
      */
-    public function isTypeCar()
+    public function isTypeCar(): bool
     {
         return $this->type === self::TYPE_CAR;
     }
@@ -127,7 +127,7 @@ class Vehicle extends \yii\db\ActiveRecord
     /**
      * @return bool
      */
-    public function isTypeScooter()
+    public function isTypeScooter(): bool
     {
         return $this->type === self::TYPE_SCOOTER;
     }
@@ -158,7 +158,7 @@ class Vehicle extends \yii\db\ActiveRecord
         }
     }
 
-    public function extraFields()
+    public function extraFields(): array
     {
         return ['courier'];
     }

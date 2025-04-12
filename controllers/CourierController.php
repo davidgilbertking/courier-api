@@ -14,7 +14,7 @@ class CourierController extends ActiveController
 {
     public $modelClass = 'app\models\Courier';
 
-    public function actions()
+    public function actions(): array
     {
         $actions = parent::actions();
 
@@ -36,7 +36,7 @@ class CourierController extends ActiveController
         return $actions;
     }
 
-    public function behaviors()
+    public function behaviors(): array
     {
         $behaviors = parent::behaviors();
 

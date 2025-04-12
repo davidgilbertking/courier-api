@@ -32,7 +32,7 @@ class Courier extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'couriers';
     }
@@ -40,7 +40,7 @@ class Courier extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['patronymic'], 'default', 'value' => null],
@@ -55,7 +55,7 @@ class Courier extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id'         => 'ID',
@@ -73,7 +73,7 @@ class Courier extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getCourierRequests()
+    public function getCourierRequests(): \yii\db\ActiveQuery
     {
         return $this->hasMany(CourierRequest::class, ['courier_id' => 'id']);
     }
@@ -83,7 +83,7 @@ class Courier extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getVehicles()
+    public function getVehicles(): \yii\db\ActiveQuery
     {
         return $this->hasMany(Vehicle::class, ['courier_id' => 'id']);
     }
@@ -93,7 +93,7 @@ class Courier extends \yii\db\ActiveRecord
      *
      * @return string[]
      */
-    public static function optsRole()
+    public static function optsRole(): array
     {
         return [
             self::ROLE_MAIN  => 'main',
@@ -104,7 +104,7 @@ class Courier extends \yii\db\ActiveRecord
     /**
      * @return string
      */
-    public function displayRole()
+    public function displayRole(): string
     {
         return self::optsRole()[$this->role];
     }
@@ -112,7 +112,7 @@ class Courier extends \yii\db\ActiveRecord
     /**
      * @return bool
      */
-    public function isRoleMain()
+    public function isRoleMain(): bool
     {
         return $this->role === self::ROLE_MAIN;
     }
@@ -125,7 +125,7 @@ class Courier extends \yii\db\ActiveRecord
     /**
      * @return bool
      */
-    public function isRoleBasic()
+    public function isRoleBasic(): bool
     {
         return $this->role === self::ROLE_BASIC;
     }
@@ -135,7 +135,7 @@ class Courier extends \yii\db\ActiveRecord
         $this->role = self::ROLE_BASIC;
     }
 
-    public function beforeSave($insert)
+    public function beforeSave($insert): bool
     {
         if ($insert && empty($this->api_token)) {
             $this->api_token = Yii::$app->security->generateRandomString(64);
@@ -144,7 +144,7 @@ class Courier extends \yii\db\ActiveRecord
         return parent::beforeSave($insert);
     }
 
-    public function extraFields()
+    public function extraFields(): array
     {
         return ['vehicles', 'courierRequests'];
     }
