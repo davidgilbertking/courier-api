@@ -14,7 +14,7 @@ REST API для управления курьерами, транспортом 
 ## 🚀 Установка (локально, без Vagrant)
 
 ```bash
-git clone https://github.com/your-username/courier-api.git
+git clone https://github.com/davidgilbertking/courier-api.git
 cd courier-api
 composer install
 cp .env.example .env # если требуется
