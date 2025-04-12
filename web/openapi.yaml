@@ -1,288 +1,393 @@
 openapi: 3.0.0
 info:
-    title: Courier API
-    version: 1.0.0
-    description: |
-        REST API для управления курьерами, транспортом и заявками курьеров.
+  title: Courier API
+  version: 1.0.0
+  description: |
+    REST API для управления курьерами, транспортом и заявками курьеров.
 
 servers:
-    -   url: http://localhost:8080
-        description: Локальный сервер
+  - url: http://localhost:8080
+    description: Локальный сервер
 
 security:
-    -   ApiKeyAuth: [ ]
-
+  - ApiKeyAuth: []
 
 paths:
-    /couriers:
-        get:
-            summary: Получить список курьеров
-            parameters:
-                -   in: query
-                    name: role
-                    schema:
-                        type: string
-                    description: Фильтр по роли (main, basic)
-            responses:
-                '200':
-                    description: Список курьеров
-                    content:
-                        application/json:
-                            schema:
-                                type: array
-                                items:
-                                    $ref: '#/components/schemas/Courier'
-        post:
-            summary: Создать нового курьера
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CourierInput'
-            responses:
-                '201':
-                    description: Курьер создан
-                '422':
-                    description: Ошибка валидации
+  /couriers:
+    get:
+      summary: Получить список курьеров
+      parameters:
+        - in: query
+          name: role
+          schema:
+            type: string
+          description: Фильтр по роли (main, basic)
+      responses:
+        '200':
+          description: Список курьеров
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Courier'
+        '401':
+          description: API ключ отсутствует
+          content:
+            application/json:
+              example:
+                name: Unauthorized
+                message: API ключ отсутствует.
+                code: 0
+                status: 401
+                type: yii\web\UnauthorizedHttpException
+    post:
+      summary: Создать нового курьера
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourierInput'
+      responses:
+        '201':
+          description: Курьер создан
+        '401':
+          description: API ключ отсутствует
+          content:
+            application/json:
+              example:
+                name: Unauthorized
+                message: API ключ отсутствует.
+                code: 0
+                status: 401
+                type: yii\web\UnauthorizedHttpException
+        '422':
+          description: Ошибка валидации
 
-    /couriers/{id}:
-        put:
-            summary: Обновить данные курьера
-            parameters:
-                -   name: id
-                    in: path
-                    required: true  # обязательно!
-                    description: Уникальный идентификатор курьера
-                    schema:
-                        type: integer
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CourierInput'
-            responses:
-                '200':
-                    description: Курьер обновлён
-                '404':
-                    description: Курьер не найден
-                '422':
-                    description: Ошибка валидации
+  /couriers/{id}:
+    put:
+      summary: Обновить данные курьера
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Уникальный идентификатор курьера
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourierInput'
+      responses:
+        '200':
+          description: Курьер обновлён
+        '401':
+          description: API ключ отсутствует
+          content:
+            application/json:
+              example:
+                name: Unauthorized
+                message: API ключ отсутствует.
+                code: 0
+                status: 401
+                type: yii\web\UnauthorizedHttpException
+        '404':
+          description: Курьер не найден
+        '422':
+          description: Ошибка валидации
+    delete:
+      summary: Удалить курьера
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Курьер удалён
+        '401':
+          description: API ключ отсутствует
+          content:
+            application/json:
+              example:
+                name: Unauthorized
+                message: API ключ отсутствует.
+                code: 0
+                status: 401
+                type: yii\web\UnauthorizedHttpException
 
-        delete:
-            summary: Удалить курьера
-            parameters:
-                -   name: id
-                    in: path
-                    required: true
-                    schema:
-                        type: integer
-            responses:
-                '204':
-                    description: Курьер удалён
+  /vehicles:
+    get:
+      summary: Получить список транспорта
+      parameters:
+        - in: query
+          name: courier_id
+          schema:
+            type: integer
+        - in: query
+          name: type
+          schema:
+            type: string
+            enum: [car, scooter]
+      responses:
+        '200':
+          description: Список транспорта
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vehicle'
+        '401':
+          description: API ключ отсутствует
+          content:
+            application/json:
+              example:
+                name: Unauthorized
+                message: API ключ отсутствует.
+                code: 0
+                status: 401
+                type: yii\web\UnauthorizedHttpException
+    post:
+      summary: Добавить транспорт курьеру
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleInput'
+      responses:
+        '201':
+          description: Транспорт добавлен
+        '401':
+          description: API ключ отсутствует
+          content:
+            application/json:
+              example:
+                name: Unauthorized
+                message: API ключ отсутствует.
+                code: 0
+                status: 401
+                type: yii\web\UnauthorizedHttpException
+        '422':
+          description: Ошибка валидации
 
-    /vehicles:
-        get:
-            summary: Получить список транспорта
-            parameters:
-                -   in: query
-                    name: courier_id
-                    schema:
-                        type: integer
-                -   in: query
-                    name: type
-                    schema:
-                        type: string
-                        enum: [ car, scooter ]
-            responses:
-                '200':
-                    description: Список транспорта
-                    content:
-                        application/json:
-                            schema:
-                                type: array
-                                items:
-                                    $ref: '#/components/schemas/Vehicle'
-        post:
-            summary: Добавить транспорт курьеру
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/VehicleInput'
-            responses:
-                '201':
-                    description: Транспорт добавлен
-                '422':
-                    description: Ошибка валидации
+  /vehicles/{id}:
+    put:
+      summary: Обновить транспорт
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleInput'
+      responses:
+        '200':
+          description: Транспорт обновлён
+        '401':
+          description: API ключ отсутствует
+          content:
+            application/json:
+              example:
+                name: Unauthorized
+                message: API ключ отсутствует.
+                code: 0
+                status: 401
+                type: yii\web\UnauthorizedHttpException
+        '422':
+          description: Ошибка валидации
+    delete:
+      summary: Удалить транспорт
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Транспорт удалён
+        '401':
+          description: API ключ отсутствует
+          content:
+            application/json:
+              example:
+                name: Unauthorized
+                message: API ключ отсутствует.
+                code: 0
+                status: 401
+                type: yii\web\UnauthorizedHttpException
 
-    /vehicles/{id}:
-        put:
-            summary: Обновить транспорт
-            parameters:
-                -   name: id
-                    in: path
-                    required: true
-                    schema:
-                        type: integer
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/VehicleInput'
-            responses:
-                '200':
-                    description: Транспорт обновлён
-                '422':
-                    description: Ошибка валидации
+  /courier-requests:
+    get:
+      summary: Получить заявки курьеров
+      responses:
+        '200':
+          description: Список заявок
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourierRequest'
+        '401':
+          description: API ключ отсутствует
+          content:
+            application/json:
+              example:
+                name: Unauthorized
+                message: API ключ отсутствует.
+                code: 0
+                status: 401
+                type: yii\web\UnauthorizedHttpException
+    post:
+      summary: Создать заявку курьера
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourierRequestInput'
+      responses:
+        '201':
+          description: Заявка создана
+        '401':
+          description: API ключ отсутствует
+          content:
+            application/json:
+              example:
+                name: Unauthorized
+                message: API ключ отсутствует.
+                code: 0
+                status: 401
+                type: yii\web\UnauthorizedHttpException
+        '422':
+          description: Ошибка валидации (например, уже есть заявка со статусом started)
 
-        delete:
-            summary: Удалить транспорт
-            parameters:
-                -   name: id
-                    in: path
-                    required: true
-                    schema:
-                        type: integer
-            responses:
-                '204':
-                    description: Транспорт удалён
-
-    /courier-requests:
-        get:
-            summary: Получить заявки курьеров
-            responses:
-                '200':
-                    description: Список заявок
-                    content:
-                        application/json:
-                            schema:
-                                type: array
-                                items:
-                                    $ref: '#/components/schemas/CourierRequest'
-
-        post:
-            summary: Создать заявку курьера
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CourierRequestInput'
-            responses:
-                '201':
-                    description: Заявка создана
-                '422':
-                    description: Ошибка валидации (например, уже есть заявка со статусом started)
-
-    /courier-requests/{id}:
-        delete:
-            summary: Удалить заявку (мягкое удаление)
-            parameters:
-                -   name: id
-                    in: path
-                    required: true
-                    schema:
-                        type: integer
-            responses:
-                '200':
-                    description: Заявка помечена как удалённая
-                '404':
-                    description: Заявка не найдена или уже удалена
+  /courier-requests/{id}:
+    delete:
+      summary: Удалить заявку (мягкое удаление)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Заявка помечена как удалённая
+        '401':
+          description: API ключ отсутствует
+          content:
+            application/json:
+              example:
+                name: Unauthorized
+                message: API ключ отсутствует.
+                code: 0
+                status: 401
+                type: yii\web\UnauthorizedHttpException
+        '404':
+          description: Заявка не найдена или уже удалена
 
 components:
-    schemas:
-        Courier:
-            type: object
-            properties:
-                id:
-                    type: integer
-                role:
-                    type: string
-                email:
-                    type: string
-                first_name:
-                    type: string
-                last_name:
-                    type: string
-                patronymic:
-                    type: string
-                    nullable: true
+  schemas:
+    Courier:
+      type: object
+      properties:
+        id:
+          type: integer
+        role:
+          type: string
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        patronymic:
+          type: string
+          nullable: true
 
-        CourierInput:
-            type: object
-            required: [ role, email, first_name, last_name ]
-            properties:
-                role:
-                    type: string
-                    enum: [ main, basic ]
-                email:
-                    type: string
-                first_name:
-                    type: string
-                last_name:
-                    type: string
-                patronymic:
-                    type: string
+    CourierInput:
+      type: object
+      required: [role, email, first_name, last_name]
+      properties:
+        role:
+          type: string
+          enum: [main, basic]
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        patronymic:
+          type: string
 
-        Vehicle:
-            type: object
-            properties:
-                id:
-                    type: integer
-                courier_id:
-                    type: integer
-                type:
-                    type: string
-                    enum: [ car, scooter ]
-                serial_number:
-                    type: string
+    Vehicle:
+      type: object
+      properties:
+        id:
+          type: integer
+        courier_id:
+          type: integer
+        type:
+          type: string
+          enum: [car, scooter]
+        serial_number:
+          type: string
 
-        VehicleInput:
-            type: object
-            required: [ courier_id, type, serial_number ]
-            properties:
-                courier_id:
-                    type: integer
-                type:
-                    type: string
-                    enum: [ car, scooter ]
-                serial_number:
-                    type: string
+    VehicleInput:
+      type: object
+      required: [courier_id, type, serial_number]
+      properties:
+        courier_id:
+          type: integer
+        type:
+          type: string
+          enum: [car, scooter]
+        serial_number:
+          type: string
 
-        CourierRequest:
-            type: object
-            properties:
-                id:
-                    type: integer
-                courier_id:
-                    type: integer
-                vehicle_id:
-                    type: integer
-                status:
-                    type: string
-                created_at:
-                    type: string
-                    format: date-time
+    CourierRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        courier_id:
+          type: integer
+        vehicle_id:
+          type: integer
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
 
-        CourierRequestInput:
-            type: object
-            required: [ courier_id, vehicle_id, status ]
-            properties:
-                courier_id:
-                    type: integer
-                vehicle_id:
-                    type: integer
-                status:
-                    type: string
-                    enum: [ started, holded, finished ]
+    CourierRequestInput:
+      type: object
+      required: [courier_id, vehicle_id, status]
+      properties:
+        courier_id:
+          type: integer
+        vehicle_id:
+          type: integer
+        status:
+          type: string
+          enum: [started, holded, finished]
 
-    securitySchemes:
-        ApiKeyAuth:
-            type: apiKey
-            in: header
-            name: X-Api-Key
-
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-Api-Key
