@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace app\components;
 
 use Yii;
+use yii\base\Action;
 use yii\base\ActionFilter;
 use yii\web\ForbiddenHttpException;
 use yii\web\UnauthorizedHttpException;
@@ -12,7 +13,7 @@ use app\models\Courier;
 
 class ApiAuth extends ActionFilter
 {
-    public function beforeAction($action): bool
+    public function beforeAction(Action $action): bool
     {
         $method = Yii::$app->request->method;
 

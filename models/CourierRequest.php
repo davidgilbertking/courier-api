@@ -133,7 +133,7 @@ class CourierRequest extends \yii\db\ActiveRecord
         return $this->status === self::STATUS_STARTED;
     }
 
-    public function setStatusToStarted()
+    public function setStatusToStarted(): void
     {
         $this->status = self::STATUS_STARTED;
     }
@@ -146,7 +146,7 @@ class CourierRequest extends \yii\db\ActiveRecord
         return $this->status === self::STATUS_HOLDED;
     }
 
-    public function setStatusToHolded()
+    public function setStatusToHolded(): void
     {
         $this->status = self::STATUS_HOLDED;
     }
@@ -159,12 +159,12 @@ class CourierRequest extends \yii\db\ActiveRecord
         return $this->status === self::STATUS_FINISHED;
     }
 
-    public function setStatusToFinished()
+    public function setStatusToFinished(): void
     {
         $this->status = self::STATUS_FINISHED;
     }
 
-    public function validateOnlyOneStarted($attribute, $params)
+    public function validateOnlyOneStarted(string $attribute, mixed $params): void
     {
         if ($this->status === 'started') {
             $query = self::find()

@@ -40,7 +40,7 @@ class CourierRequestController extends ActiveController
         return $actions;
     }
 
-    public function actionCreate()
+    public function actionCreate(): array|CourierRequest
     {
         $model = new CourierRequest();
         $model->load(Yii::$app->getRequest()->getBodyParams());

@@ -117,7 +117,7 @@ class Courier extends \yii\db\ActiveRecord
         return $this->role === self::ROLE_MAIN;
     }
 
-    public function setRoleToMain()
+    public function setRoleToMain(): void
     {
         $this->role = self::ROLE_MAIN;
     }
@@ -130,7 +130,7 @@ class Courier extends \yii\db\ActiveRecord
         return $this->role === self::ROLE_BASIC;
     }
 
-    public function setRoleToBasic()
+    public function setRoleToBasic(): void
     {
         $this->role = self::ROLE_BASIC;
     }

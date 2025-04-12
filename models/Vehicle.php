@@ -119,7 +119,7 @@ class Vehicle extends \yii\db\ActiveRecord
         return $this->type === self::TYPE_CAR;
     }
 
-    public function setTypeToCar()
+    public function setTypeToCar(): void
     {
         $this->type = self::TYPE_CAR;
     }
@@ -132,12 +132,12 @@ class Vehicle extends \yii\db\ActiveRecord
         return $this->type === self::TYPE_SCOOTER;
     }
 
-    public function setTypeToScooter()
+    public function setTypeToScooter(): void
     {
         $this->type = self::TYPE_SCOOTER;
     }
 
-    public function validateUniqueTypePerCourier($attribute, $params)
+    public function validateUniqueTypePerCourier(string $attribute, mixed $params): void
     {
         if (!$this->courier_id || !$this->type) {
             return;
