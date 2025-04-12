@@ -40,14 +40,10 @@
         }
     },
     "scripts": {
-        "post-install-cmd": [
-            "yii\\composer\\Installer::postInstall"
-        ],
-        "post-create-project-cmd": [
-            "yii\\composer\\Installer::postCreateProject",
-            "yii\\composer\\Installer::postInstall"
-        ]
+        "post-create-project-cmd": [],
+        "post-install-cmd": []
     },
+
     "extra": {
         "yii\\composer\\Installer::postCreateProject": {
             "setPermission": [
