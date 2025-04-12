@@ -14,6 +14,13 @@ class ApiAuth extends ActionFilter
 {
     public function beforeAction($action)
     {
+        $method = Yii::$app->request->method;
+
+        // Разрешаем GET-запросы без авторизации
+        if ($method === 'GET') {
+            return parent::beforeAction($action);
+        }
+
         $apiKey = Yii::$app->request->headers->get('X-Api-Key');
 
         if (!$apiKey) {
@@ -21,18 +28,16 @@ class ApiAuth extends ActionFilter
         }
 
         $courier = Courier::findOne(['api_token' => $apiKey]);
-
         if (!$courier) {
             throw new UnauthorizedHttpException('Неверный API ключ.');
         }
 
         Yii::$app->params['currentUser'] = $courier;
 
-        if (YII_DEBUG) {
-            Yii::info("API авторизация: {$courier->email} ({$courier->role})", __METHOD__);
+        // Только main-роль может использовать POST / PUT / DELETE
+        if (in_array($method, ['POST', 'PUT', 'DELETE']) && $courier->role !== Courier::ROLE_MAIN) {
+            throw new ForbiddenHttpException('Недостаточно прав.');
         }
-
-        $this->checkPermissions($courier);
 
         return parent::beforeAction($action);
     }
