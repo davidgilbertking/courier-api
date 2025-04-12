@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace app\components;
 
 use Yii;
-use yii\base\Action;
 use yii\base\ActionFilter;
 use yii\web\ForbiddenHttpException;
 use yii\web\UnauthorizedHttpException;
