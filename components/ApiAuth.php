@@ -13,7 +13,7 @@ use app\models\Courier;
 
 class ApiAuth extends ActionFilter
 {
-    public function beforeAction(Action $action): bool
+    public function beforeAction($action): bool
     {
         $method = Yii::$app->request->method;
 
