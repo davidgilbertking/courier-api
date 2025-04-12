@@ -29,7 +29,7 @@ php -S localhost:8080 -t web
 ## 🧪 Тесты
 
 ```bash
-vendor/bin/codecept run
+vendor/bin/codecept run unit
 ```
 
 ---
