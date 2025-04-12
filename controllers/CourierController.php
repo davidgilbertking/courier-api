@@ -38,10 +38,21 @@ class CourierController extends ActiveController
 
     public function behaviors()
     {
-        return array_merge(parent::behaviors(), [
-            'auth' => [
+        $behaviors = parent::behaviors();
+
+        $request = Yii::$app->request;
+
+        // Разрешаем POST /couriers без авторизации, если курьеров нет
+        // это создано для тестирования приложения
+        $isCreatingCourier = $request->method === 'POST' && $request->pathInfo === 'couriers';
+        $noCouriersYet = Courier::find()->count() === 0;
+
+        if (!$isCreatingCourier || !$noCouriersYet) {
+            $behaviors['auth'] = [
                 'class' => ApiAuth::class,
-            ],
-        ]);
+            ];
+        }
+
+        return $behaviors;
     }
 }
