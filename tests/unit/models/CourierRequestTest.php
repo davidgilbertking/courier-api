@@ -20,10 +20,9 @@ class CourierRequestTest extends Unit
     {
         $this->transaction = Yii::$app->db->beginTransaction();
 
-        // создаём тестового курьера и транспорт
         $this->courier = new Courier([
                                          'role' => Courier::ROLE_MAIN,
-                                         'email' => 'request@example.com',
+                                         'email' => uniqid('request-') . '@example.com',
                                          'first_name' => 'Request',
                                          'last_name' => 'Tester',
                                      ]);
@@ -32,7 +31,7 @@ class CourierRequestTest extends Unit
         $this->vehicle = new Vehicle([
                                          'courier_id' => $this->courier->id,
                                          'type' => Vehicle::TYPE_CAR,
-                                         'serial_number' => 'REQ-1234',
+                                         'serial_number' => uniqid('REQ-'),
                                      ]);
         $this->vehicle->save(false);
     }
@@ -49,7 +48,7 @@ class CourierRequestTest extends Unit
                                           'vehicle_id' => $this->vehicle->id,
                                       ]);
 
-        $this->assertFalse($request->validate(), 'Должна быть ошибка без статуса');
+        $this->assertFalse($request->validate());
         $this->assertArrayHasKey('status', $request->errors);
     }
 
@@ -61,12 +60,11 @@ class CourierRequestTest extends Unit
                                           'status' => CourierRequest::STATUS_STARTED,
                                       ]);
 
-        $this->assertTrue($request->validate(), 'Модель должна пройти валидацию с корректными данными');
+        $this->assertTrue($request->validate());
     }
 
     public function testOnlyOneStartedRequestAllowed()
     {
-        // первая "started" заявка
         $first = new CourierRequest([
                                         'courier_id' => $this->courier->id,
                                         'vehicle_id' => $this->vehicle->id,
@@ -74,13 +72,13 @@ class CourierRequestTest extends Unit
                                     ]);
         $first->save(false);
 
-        // вторая — не должна пройти валидацию
         $second = new CourierRequest([
                                          'courier_id' => $this->courier->id,
                                          'vehicle_id' => $this->vehicle->id,
                                          'status' => CourierRequest::STATUS_STARTED,
                                      ]);
-        $this->assertFalse($second->validate(), 'Должна быть ошибка, если уже есть активная заявка');
+
+        $this->assertFalse($second->validate());
         $this->assertArrayHasKey('status', $second->errors);
     }
 
@@ -95,5 +93,40 @@ class CourierRequestTest extends Unit
 
         $this->assertEquals($this->courier->id, $request->courier->id);
         $this->assertEquals($this->vehicle->id, $request->vehicle->id);
+    }
+
+    public function testStatusHelpersAndSetters()
+    {
+        $request = new CourierRequest([
+                                          'status' => CourierRequest::STATUS_HOLDED
+                                      ]);
+
+        $this->assertTrue($request->isStatusHolded());
+        $this->assertFalse($request->isStatusStarted());
+        $this->assertFalse($request->isStatusFinished());
+
+        $request->setStatusToStarted();
+        $this->assertTrue($request->isStatusStarted());
+
+        $request->setStatusToFinished();
+        $this->assertTrue($request->isStatusFinished());
+    }
+
+    public function testDisplayStatus()
+    {
+        $request = new CourierRequest(['status' => CourierRequest::STATUS_HOLDED]);
+        $this->assertEquals('holded', $request->displayStatus());
+
+        $request->status = 'unexpected';
+        $this->assertEquals('unexpected', $request->displayStatus(), 'Должен возвращаться оригинальный статус, если он не найден в optsStatus');
+    }
+
+    public function testExtraFields()
+    {
+        $request = new CourierRequest();
+        $extra = $request->extraFields();
+
+        $this->assertContains('courier', $extra);
+        $this->assertContains('vehicle', $extra);
     }
 }

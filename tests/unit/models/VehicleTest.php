@@ -39,7 +39,7 @@ class VehicleTest extends Unit
 
         $vehicle = new Vehicle([
                                    'courier_id' => $courier->id,
-                                   'type' => 'bike', // недопустимое значение
+                                   'type' => 'bike',
                                    'serial_number' => 'SN12345'
                                ]);
 
@@ -93,6 +93,35 @@ class VehicleTest extends Unit
 
         $this->assertInstanceOf(Courier::class, $vehicle->courier);
         $this->assertEquals($courier->id, $vehicle->courier->id);
+    }
+
+    public function testDisplayType()
+    {
+        $vehicle = new Vehicle(['type' => Vehicle::TYPE_SCOOTER]);
+        $this->assertEquals('scooter', $vehicle->displayType());
+
+        $vehicle->setTypeToCar();
+        $this->assertEquals('car', $vehicle->displayType());
+    }
+
+    public function testTypeCheckersAndSetters()
+    {
+        $vehicle = new Vehicle(['type' => Vehicle::TYPE_SCOOTER]);
+
+        $this->assertTrue($vehicle->isTypeScooter());
+        $this->assertFalse($vehicle->isTypeCar());
+
+        $vehicle->setTypeToCar();
+        $this->assertTrue($vehicle->isTypeCar());
+        $this->assertFalse($vehicle->isTypeScooter());
+    }
+
+    public function testExtraFields()
+    {
+        $vehicle = new Vehicle();
+        $extraFields = $vehicle->extraFields();
+
+        $this->assertContains('courier', $extraFields);
     }
 
     private function createCourier(): Courier

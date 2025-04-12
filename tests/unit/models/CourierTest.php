@@ -36,10 +36,10 @@ class CourierTest extends Unit
     public function testValidationPassesWithCorrectData()
     {
         $courier = new Courier([
-                                   'role'       => Courier::ROLE_MAIN,
-                                   'email'      => 'test@example.com',
+                                   'role' => Courier::ROLE_MAIN,
+                                   'email' => 'test@example.com',
                                    'first_name' => 'Test',
-                                   'last_name'  => 'User',
+                                   'last_name' => 'User',
                                ]);
 
         $this->assertTrue($courier->validate(), 'Модель должна быть валидна при корректных данных');
@@ -48,10 +48,10 @@ class CourierTest extends Unit
     public function testApiTokenIsGeneratedOnSave()
     {
         $courier = new Courier([
-                                   'role'       => Courier::ROLE_MAIN,
-                                   'email'      => 'token-test@example.com',
+                                   'role' => Courier::ROLE_MAIN,
+                                   'email' => 'token-test@example.com',
                                    'first_name' => 'Token',
-                                   'last_name'  => 'Tester',
+                                   'last_name' => 'Tester',
                                ]);
 
         $this->assertTrue($courier->save(false), 'Сохранение должно пройти успешно');
@@ -63,18 +63,18 @@ class CourierTest extends Unit
         $email = 'unique@example.com';
 
         $first = new Courier([
-                                 'role'       => Courier::ROLE_MAIN,
-                                 'email'      => $email,
+                                 'role' => Courier::ROLE_MAIN,
+                                 'email' => $email,
                                  'first_name' => 'First',
-                                 'last_name'  => 'Courier',
+                                 'last_name' => 'Courier',
                              ]);
         $this->assertTrue($first->save(), 'Первый курьер должен сохраниться');
 
         $second = new Courier([
-                                  'role'       => Courier::ROLE_BASIC,
-                                  'email'      => $email,
+                                  'role' => Courier::ROLE_BASIC,
+                                  'email' => $email,
                                   'first_name' => 'Second',
-                                  'last_name'  => 'Courier',
+                                  'last_name' => 'Courier',
                               ]);
         $this->assertFalse($second->save(), 'Второй курьер с таким же email не должен сохраниться');
         $this->assertArrayHasKey('email', $second->errors, 'Ожидается ошибка на поле email');
@@ -83,10 +83,10 @@ class CourierTest extends Unit
     public function testApiTokenNotRegeneratedOnUpdate()
     {
         $courier = new Courier([
-                                   'role'       => Courier::ROLE_MAIN,
-                                   'email'      => 'update-token@example.com',
+                                   'role' => Courier::ROLE_MAIN,
+                                   'email' => 'update-token@example.com',
                                    'first_name' => 'Original',
-                                   'last_name'  => 'User',
+                                   'last_name' => 'User',
                                ]);
         $courier->save(false);
         $originalToken = $courier->api_token;
@@ -100,13 +100,49 @@ class CourierTest extends Unit
     public function testInvalidRoleFailsValidation()
     {
         $courier = new Courier([
-                                   'role'       => 'invalid',
-                                   'email'      => 'role-test@example.com',
+                                   'role' => 'invalid',
+                                   'email' => 'role-test@example.com',
                                    'first_name' => 'Enum',
-                                   'last_name'  => 'Test',
+                                   'last_name' => 'Test',
                                ]);
 
         $this->assertFalse($courier->validate(), 'Неверная роль должна вызывать ошибку валидации');
         $this->assertArrayHasKey('role', $courier->errors);
+    }
+
+    public function testRoleCheckersAndSetters()
+    {
+        $courier = new Courier([
+                                   'role' => Courier::ROLE_BASIC,
+                                   'email' => 'role-helper@example.com',
+                                   'first_name' => 'Helper',
+                                   'last_name' => 'Tester',
+                               ]);
+
+        $this->assertTrue($courier->isRoleBasic());
+        $this->assertFalse($courier->isRoleMain());
+
+        $courier->setRoleToMain();
+
+        $this->assertTrue($courier->isRoleMain());
+        $this->assertFalse($courier->isRoleBasic());
+    }
+
+    public function testDisplayRole()
+    {
+        $courier = new Courier(['role' => Courier::ROLE_MAIN]);
+        $this->assertEquals('main', $courier->displayRole());
+
+        $courier->setRoleToBasic();
+        $this->assertEquals('basic', $courier->displayRole());
+    }
+
+    public function testExtraFields()
+    {
+        $courier = new Courier();
+        $extraFields = $courier->extraFields();
+
+        $this->assertContains('vehicles', $extraFields);
+        $this->assertContains('courierRequests', $extraFields);
     }
 }
